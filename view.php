@@ -127,53 +127,15 @@ text-align: center;
 }
 tr:hover td{ background: #d0dafd; color: #339; } /* Hover cell effect! */
 </style>';
-$first_student_proposition= retrieve_first_proposition_info_student($COURSE->id, $USER->id);
-if($first_student_proposition!=NULL){
-	echo '<table cellspacing="0" border="1" >
-		<colgroup>
-		<col style="width: 10%" />
-		<col style="width: 10%" />
-		<col style="width: 10%" />
-		<col style="width: 10%" />
-		<col style="width: 10%" />
-	</colgroup>
-		<thead>
-			<tr>
-				<th>Title</th>
-				<th>Date added</th>
-				<th>Approved</th>
-				<th>Lecturer assigned</th>
-				<th>Continue</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>';
-			// $this->content->footer .= '<h5>'.get_string('howToConnectInstr', 'block_teleconference_noticeboard').'</h5>';	
-			// var_dump($first_student_proposition);
-			foreach($first_student_proposition as $fsp){
-				echo '<tr>';
-				echo '<td>'.$fsp->first_proposition_a.'</td><td>'.$fsp->date_added.'</td><td>'.$fsp->first_proposition_approved.'</td><td>Something</td>';
-				if ($fsp->first_proposition_approved == '1'){
-					echo '<td>Continue to the second form</td>';	
-				}elseif($fsp->first_proposition_approved == '0'){
-					echo '<td>Edit your submision. The proposition you submitted was not approved</td>';
-				}elseif($fsp->first_proposition_approved == '-1'){
-					echo '<td>You are not approved yet</td>';
-				}
-				
-				echo '</tr>';
-			}
-			echo'</tr>
-		</tbody>
-	</table>';
 
+$courseContext = context_course::instance($COURSE->id);
+$students = get_role_users(5, $courseContext);
 
+var_dump($students);
 
-		}else{
-			// $this->content->footer .= '<h5>'.get_string('noSessionsYet', 'block_teleconference_noticeboard').'</h5>';	
-			echo "You didn't submit anything. Please submit.";
-		}
-
+// studentView();
+// teacherView();
+// noneditingteacherView();
 
 // Finish the page.
 echo $OUTPUT->footer();
