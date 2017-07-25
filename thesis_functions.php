@@ -30,27 +30,29 @@ function navigateToCourse($courseID){
 }
 
 function navigatetomodule($courseID){
-	redirect (new moodle_url('/mod/newmodule/view.php', array('id'=>$courseID)));	
+	global $DB, $COURSE;	
+	$module=$DB->get_record('modules',array('name'=>'newmodule'));
+	$coursemodule=$DB->get_record('course_modules',array('course'=>$COURSE->id , 'instance'=>'1', 'module'=>$module->id));
+	redirect (new moodle_url('/mod/newmodule/view.php', array('id'=>$coursemodule->id)));	
 }
 /*
 	show proposition to student
 */
 function retrieve_first_proposition_info_student($courseID, $studentID){
-	global $DB,$COURSE;
-	$sessions=$DB->get_records('first_thesis_proposition',array('courseid'=>$COURSE->id));
+	global $DB;
+	$sessions=$DB->get_records('first_thesis_proposition',array('courseid'=>$courseID, 'userid'=>$studentID));
 	$sessionArr=[];
 	foreach($sessions as $session){
 		array_push($sessionArr, $session);
 	}
 	return $sessionArr;	
-	
 }
 /*
 	show all propositions to course leader
 */
-function retrieve_all_first_proposition_info($studentID){
+function retrieve_all_first_proposition_info($courseid){
 	global $DB,$COURSE;
-	$sessions=$DB->get_records('first_thesis_proposition',array('courseid'=>$COURSE->id));
+	$sessions=$DB->get_records('first_thesis_proposition',array('courseid'=>$courseid));
 	$sessionArr=[];
 	foreach($sessions as $session){
 		array_push($sessionArr, $session);
@@ -110,3 +112,70 @@ function studentView(){
 	
 	
 }
+
+function teacherView(){
+	global $DB,$COURSE,$USER;
+	
+	$all_first_student_proposition= retrieve_all_first_proposition_info($COURSE->id);
+	if($all_first_student_proposition!=NULL){
+		echo '<table cellspacing="0" border="1" >
+		<colgroup>
+			<col style="width: 10%" />
+			<col style="width: 10%" />
+			<col style="width: 10%" />
+			<col style="width: 10%" />
+			<col style="width: 10%" />
+			<col style="width: 10%" />
+		</colgroup>
+			<thead>
+				<tr>
+					<th>Student</th>
+					<th>Title</th>
+					<th>Date added</th>
+					<th>Approved</th>
+					<th>Lecturer assigned</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>';
+				// $this->content->footer .= '<h5>'.get_string('howToConnectInstr', 'block_teleconference_noticeboard').'</h5>';	
+				// var_dump($first_student_proposition);
+				foreach($all_first_student_proposition as $fsp){
+					echo '<tr>';
+						$show_thesis_first_info_url = new moodle_url("/mod/newmodule/showstudent_first_thesis_info_teacher.php", array('courseid'=>$COURSE->id, 'studentid'=>$fsp->userid));
+						$useridarray= array('id'=>$fsp->userid);
+						$userdetails=$DB->get_record('user', $useridarray);	 //get info of the user from DB 
+						echo '<td>'.$userdetails->firstname." ".$userdetails->lastname.'</td>';				
+						echo '<td><a href="'.$show_thesis_first_info_url.'">'.$fsp->first_proposition_a.'</a></td>';
+						echo '<td>'.$fsp->date_added.'</td>';
+							if ($fsp->first_proposition_approved == '1'){
+								echo '<td style="color:green; font-weight:bold;">Approved</td>';	
+							}elseif($fsp->first_proposition_approved == '0'){
+								echo '<td style="color:red; font-weight:bold;">Not approved</td>';
+							}elseif($fsp->first_proposition_approved == '-1'){
+								echo '<td style="color:orange; font-weight:bold;">Not approved yet</td>';
+							}
+							if($fsp->assigned_lecturer_id == '-1'){
+								echo '<td style="color:red;">No lecturer assigned yet</td>';
+							}
+							// print lecturers name and surname
+							// elseif(){ 								
+							// }
+							
+						echo '<td>Something</td>';			
+					echo '</tr>';
+				}
+				echo'</tr>
+			</tbody>
+		</table>';
+		}else{
+			// $this->content->footer .= '<h5>'.get_string('noSessionsYet', 'block_teleconference_noticeboard').'</h5>';	
+			echo "There is nothing submitted";
+		}
+	
+	
+}
+
+
+

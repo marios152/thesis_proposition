@@ -44,6 +44,7 @@ $PAGE->set_url($CFG->wwwroot.'/mod/newmodule/addstudent_first_thesis_info.php');
 /*$PAGE->set_title($course->shortname.': '.$strcalendar.': '.$title);*/
 $sessionForm = new thesis_add_first_info();
 $data = $sessionForm->get_data(); // form submitted
+// var_dump($PAGE);
 if($sessionForm->is_cancelled()){
 	navigateToCourse($course->id);
 }else if( $data ){ // when form is submitted
@@ -65,6 +66,8 @@ if($sessionForm->is_cancelled()){
 	$DB->insert_record('first_thesis_proposition',$session);
 	
 	navigatetomodule($data->courseid);
+		// navigateToCourse($course->id);
+	
 }
 $PAGE->set_heading($course->fullname);
 $PAGE->navbar->add('Add thesis info', new moodle_url('/mod/newmodule/addstudent_thesis_info.php', array('courseid'=>$course->id)));

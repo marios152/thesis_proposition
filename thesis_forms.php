@@ -123,15 +123,13 @@ class thesis_show_first_info_to_student extends moodleform{
 	function definition(){
 		global $USER, $COURSE;
 		
-		$first_proposition_info = retrieve_first_proposition_info_student($USER->id, $COURSE->id);
+		$first_proposition_info = retrieve_first_proposition_info_student($COURSE->id, $USER->id);
 		
 		$mform=$this->_form;
 		$mform->addElement('header', 'general', get_string('general'));
 		
 		$textareaattributessmall='wrap="virtual" rows="5" cols="70" disabled';
 		$textareaattributes= 'wrap="virtual" rows="20" cols="70" disabled';
-		
-		var_dump($first_proposition_info);
 		
 		foreach($first_proposition_info as $fpi){
 				
@@ -208,11 +206,14 @@ class thesis_show_first_info_to_student extends moodleform{
 	All thesis propositions should be returned.
 	Course leader must be able to see all thesis propositions
 */
-class thesis_show_all_first_info_to_student extends moodleform{ 
+class thesis_show_student_first_info_to_teacher extends moodleform{ 
 	function definition(){
 		global $USER, $COURSE;
+		$courseid    = $this->_customdata['courseid'];
+		$studentid = $this->_customdata['studentid'];
 		
-		$first_proposition_info = retrieve_all_first_proposition_info($COURSE->id);
+		$first_proposition_info = retrieve_first_proposition_info_student($courseid, $studentid);
+		
 		
 		$mform=$this->_form;
 		$mform->addElement('header', 'general', get_string('general'));
@@ -220,10 +221,7 @@ class thesis_show_all_first_info_to_student extends moodleform{
 		$textareaattributessmall='wrap="virtual" rows="5" cols="70" disabled';
 		$textareaattributes= 'wrap="virtual" rows="20" cols="70" disabled';
 		
-		var_dump($first_proposition_info);
-		
 		foreach($first_proposition_info as $fpi){
-				
 			$mform->addElement('textarea', 'firstproposition_a', get_string('firstproposition_a','newmodule'),$textareaattributessmall);
 			$mform->setDefault('firstproposition_a', $fpi->first_proposition_a);
 			
@@ -243,52 +241,12 @@ class thesis_show_all_first_info_to_student extends moodleform{
 			
 			$mform->addElement('textarea', 'firstproposition_g', get_string('firstproposition_g','newmodule'),$textareaattributes);
 			$mform->setDefault('firstproposition_g', $fpi->first_proposition_g);
-			
 		}
 		
-		/*
-			approved or not
-		*/
-		$mform->addElement('hidden', 'firstproposition_approved');
-		$mform->setType('firstproposition_approved',PARAM_NOTAGS);	
-        $mform->setDefault('firstproposition_approved', "-1");
-		/*
-			lecturer id assigned to the student
-		*/
-		$mform->addElement('hidden', 'firstproposition_lecturer_id');
-		$mform->setType('firstproposition_lecturer_id',PARAM_NOTAGS);	
-        $mform->setDefault('firstproposition_lecturer_id', "-1");
-		/*
-			date added 
-		*/
-		$mform->addElement('hidden', 'firstproposition_date_added');
-		$mform->setType('firstproposition_date_added',PARAM_NOTAGS);	
-        $mform->setDefault('firstproposition_date_added', strtotime(date("y-m-d")));	
-		/*
-			course id
-		*/
-		$mform->addElement('hidden', 'courseid');
-        $mform->setType('courseid', PARAM_INT);
-        $mform->setDefault('courseid', $COURSE->id);
-		
-	
 		$objs = array();
         $objs[] =& $mform->createElement('submit', '', get_string('submitBtn', 'newmodule'));
         $objs[] =& $mform->createElement('cancel', '', get_string('cancelBtn', 'newmodule'));
         $grp =& $mform->addElement('group', 'buttonsgrp', "Options", $objs, array(' ', '<br />'), false);
 	}
-	// check that the form is not empty
-	/*function validation($data,$files){ 
-		$errors=parent::validation($data,$files);
-		if (empty($data['link'])){
-			$errors['link']='Link is required';
-		}
-		if (empty($data['time'])){
-			$errors['time']='Time is required';
-		}
-		if (empty($data['date'])){
-			$errors['date']='Date is required';
-		}		
-		return $errors;
-	}*/
+
 }

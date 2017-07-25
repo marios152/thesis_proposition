@@ -129,13 +129,29 @@ tr:hover td{ background: #d0dafd; color: #339; } /* Hover cell effect! */
 </style>';
 
 $courseContext = context_course::instance($COURSE->id);
-$students = get_role_users(5, $courseContext);
+// $students = get_role_users(5, $courseContext);
+// $lecturers = get_role_users(3, $coursecontext);
+// $non_editing_teach = get_role_users(4, $coursecontext);
+// $course_leader = get_role_users(9, $coursecontext);
+// var_dump($students);
 
-var_dump($students);
+$rolestr = array();
+$roles = get_user_roles($courseContext, $USER->id);
+foreach($roles as $role){
+	// var_dump($role);
 
-// studentView();
-// teacherView();
-// noneditingteacherView();
+	if ($role->shortname == 'student'){
+		studentView();
+
+	}elseif($role->shortname == 'teacher'){ // non-editingteacher
+		// noneditingteacherView();
+
+	}elseif($role->shortname == 'editingteacher'){ //teacher
+		teacherView();
+
+	}
+}
+
 
 // Finish the page.
 echo $OUTPUT->footer();

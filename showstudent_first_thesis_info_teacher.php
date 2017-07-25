@@ -26,6 +26,8 @@ require_once ('thesis_forms.php');
 require_once ('thesis_functions.php');
 global $PAGE,$OUTPUT,$COURSE,$CFG, $USER, $DB;
 $courseid = optional_param('courseid', SITEID, PARAM_INT);
+$studentid = optional_param('studentid', SITEID, PARAM_INT);
+
 $context = context_course::instance($courseid);
 /*
 	from moodle/calendar/event.php  -> line 91
@@ -40,9 +42,10 @@ require_login($course, false); // this is required as well for the navigation ba
 $PAGE->set_pagelayout('admin');
 $PAGE->set_context($context);
 $PAGE->set_title('Add Session Info');
-$PAGE->set_url($CFG->wwwroot.'/mod/newmodule/showstudent_first_thesis_info.php');
+$PAGE->set_url($CFG->wwwroot.'/mod/newmodule/showstudent_first_thesis_info_teacher.php');
 /*$PAGE->set_title($course->shortname.': '.$strcalendar.': '.$title);*/
-$sessionForm = new thesis_show_first_info_to_student();
+
+$sessionForm = new thesis_show_student_first_info_to_teacher(NULL, array('courseid'=>$courseid,'studentid'=>$studentid));
 $data = $sessionForm->get_data(); // form submitted
 if($sessionForm->is_cancelled()){
 	navigateToCourse($course->id);
@@ -52,7 +55,7 @@ if($sessionForm->is_cancelled()){
 	navigatetomodule($data->courseid);
 }
 $PAGE->set_heading($course->fullname);
-$PAGE->navbar->add('Add thesis info', new moodle_url('/mod/newmodule/showstudent_first_thesis_info.php', array('courseid'=>$course->id)));
+$PAGE->navbar->add('Add thesis info', new moodle_url('/mod/newmodule/showstudent_first_thesis_info_teacher.php', array('courseid'=>$course->id)));
 echo $OUTPUT->header();
 /*echo "<h1>".get_string('addUpcoming','block_teleconference_noticeboard')."</h1>";*/
 $sessionForm->display();
