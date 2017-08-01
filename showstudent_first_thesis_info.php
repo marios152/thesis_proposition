@@ -42,9 +42,11 @@ $PAGE->set_context($context);
 $PAGE->set_title('Add Session Info');
 $PAGE->set_url($CFG->wwwroot.'/mod/newmodule/showstudent_first_thesis_info.php');
 /*$PAGE->set_title($course->shortname.': '.$strcalendar.': '.$title);*/
-$sessionForm = new thesis_show_first_info_to_student();
+$sessionForm = new thesis_show_first_info_to_student(NULL, array('courseid'=>$courseid));
 $data = $sessionForm->get_data(); // form submitted
+
 if($sessionForm->is_cancelled()){
+
 	navigateToCourse($course->id);
 }else if( $data ){ // when form is submitted
 

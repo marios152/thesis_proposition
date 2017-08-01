@@ -28,6 +28,7 @@ global $PAGE,$OUTPUT,$COURSE,$CFG, $USER, $DB;
 $courseid = optional_param('courseid', SITEID, PARAM_INT);
 $studentid = optional_param('studentid', SITEID, PARAM_INT);
 
+
 $context = context_course::instance($courseid);
 /*
 	from moodle/calendar/event.php  -> line 91
@@ -45,13 +46,30 @@ $PAGE->set_title('Add Session Info');
 $PAGE->set_url($CFG->wwwroot.'/mod/newmodule/showstudent_first_thesis_info_teacher.php');
 /*$PAGE->set_title($course->shortname.': '.$strcalendar.': '.$title);*/
 
-$sessionForm = new thesis_show_student_first_info_to_teacher(NULL, array('courseid'=>$courseid,'studentid'=>$studentid));
+$noneditteacher = noneditteacher($courseid);
+// var_dump($noneditteacher);
+$sessionForm = new thesis_show_student_first_info_to_teacher(NULL, array('courseid'=>$courseid,'studentid'=>$studentid,'noneditteacher'=>$noneditteacher)); //pass lecturers array here
 $data = $sessionForm->get_data(); // form submitted
-if($sessionForm->is_cancelled()){
-	navigateToCourse($course->id);
-}else if( $data ){ // when form is submitted
 
-	// there is no submission here. only displaying data to the user.
+if($sessionForm->is_cancelled()){
+	navigateToCourse($course->id);	
+}else if( $data ){ // when form is submitted
+	$session = new stdClass(); /* session class needs to have everything the table has */
+	$session->id							=$data->rowid;
+	$session->userid						=$data->studentid;
+	$session->courseid						=$data->courseid; 
+	$session->first_proposition_a			=$data->firstproposition_a;
+	$session->first_proposition_b			=$data->firstproposition_b;
+	$session->first_proposition_c			=$data->firstproposition_c;
+	$session->first_proposition_d			=$data->firstproposition_d;
+	$session->first_proposition_e			=$data->firstproposition_e;
+	$session->first_proposition_f			=$data->firstproposition_f;
+	$session->first_proposition_g			=$data->firstproposition_g;
+	$session->first_proposition_approved	=$data->firstproposition_approved;
+	$session->date_added					=$data->firstproposition_date_added;	
+	$session->assigned_lecturer_id			=$data->noneditteacher;
+
+	$DB->update_record('first_thesis_proposition',$session); 
 	navigatetomodule($data->courseid);
 }
 $PAGE->set_heading($course->fullname);

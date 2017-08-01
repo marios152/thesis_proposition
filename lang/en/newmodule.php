@@ -51,3 +51,4 @@ $string['firstproposition_d'] = 'Δ. Ενδεικτικός πίνακας πε�
 $string['firstproposition_e'] = 'Ε. Μέθοδοι συλλογής δεδομένων και ακολουθούμενη μεθοδολογία';
 $string['firstproposition_f'] = 'Ζ. Γενική Κατηγορία - Θεματικό Πεδίο';
 $string['firstproposition_g'] = 'Προτεινόμενος Επιβλέπων (Προαιρετικά)';
+$string['selectlecturer'] = 'Select lecturer';

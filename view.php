@@ -87,10 +87,8 @@ if ($newmodule->intro) {
 echo $OUTPUT->heading('Please select options below');
 
 
-$add_thesis_first_info_url = new moodle_url("/mod/newmodule/addstudent_first_thesis_info.php", array('courseid'=>$COURSE->id));
-echo "<img style='width:15px; height:15px;' src='http://widgets.future-hawk-content.co.uk/img/misc/i.png'></img><a href='".$add_thesis_first_info_url."'>Add thesis proposition</a>";
-$show_thesis_first_info_url = new moodle_url("/mod/newmodule/showstudent_first_thesis_info.php", array('courseid'=>$COURSE->id));
-echo "<img style='width:15px; height:15px;' src='http://widgets.future-hawk-content.co.uk/img/misc/i.png'></img><a href='".$show_thesis_first_info_url."'>Show thesis proposition</a>";
+// $add_thesis_first_info_url = new moodle_url("/mod/newmodule/addstudent_first_thesis_info.php", array('courseid'=>$COURSE->id));
+// echo "<img style='width:15px; height:15px;' src='http://widgets.future-hawk-content.co.uk/img/misc/i.png'></img><a href='".$add_thesis_first_info_url."'>Add thesis proposition</a>";
 
 /*
 	Show submitted info else make the student submit. 
